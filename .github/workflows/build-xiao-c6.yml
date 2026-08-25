@@ -1,0 +1,35 @@
+name: Build XIAO C6 Wio-SX1262
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Build firmware
+        uses: meshtastic/gh-action-firmware@main
+        with:
+          pio_platform: esp32c6
+          pio_env: xiao-c6-wio-sx1262
+          pio_target: build
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware-xiao-c6-wio-sx1262
+          path: |
+            release/*.bin
+            release/*.elf
+            release/*.zip
+            release/*.mt.json
+          if-no-files-found: warn
